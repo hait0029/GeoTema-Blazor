@@ -1,0 +1,50 @@
+﻿@page "/NewPages/Countries"
+
+@using DataAccessLibrary
+@using DataAccessLibrary.Models
+
+@inject ICountriesData _db
+<h1>Countries Page</h1>
+
+<!-- hvis Lande er null skal programmet load-->
+@if (countries is null)
+{
+	<p><em>Loading...</em></p>
+}
+<!-- ellers skal den trække dette data-->
+else
+{
+	/*dette er et bootstrap css comman der oprette et stribet table til vores data*/
+	<table class = "table table-striped">
+		<thead>
+			<tr>
+				<th>Land</th>
+				<th>VerdensDel1</th>
+				<th>VerdensDel2</th>
+				<th>Rang</th>
+				<th>FødselsRate</th>
+			</tr>
+		</thead>
+		<tbody>	
+			@foreach(var country in countries)
+			{
+				<tr>
+				<td>@country.Land</td>
+				<td>@country.VerdensDel1</td>
+				<td>@country.VerdensDel2</td>
+				<td>@country.Rang</td>
+				<td>@country.FødselsRate</td>
+				</tr>
+			}
+		  </tbody>
+	</table>
+}
+@code {
+	//her laver jeg et await kald med SqlDataAccess filen også bliver der lavet select statement med dbo.Land
+	private List<CountryModel> countries;
+
+	protected override async Task OnInitializedAsync()
+	{
+		countries = await _db.GetCountries();
+	}
+}
